@@ -6,6 +6,9 @@ import sys
 
 wrtr = csv.writer(sys.stdout)
 
+# TODO this assumes that the data is in xml files under data/
+# TODO assumes 12 teams
+# TODO assumes 12 weeks
 for tm in range(1, 13) : 
 	for wk in range(1, 13) : 
 		filename = "data/stats_" + format(tm) + "_" + format(wk) + ".xml"
