@@ -8,32 +8,32 @@ import sys
 # Reads in files based on a known directory/filename layout.
 
 # For each file, extracts each player as a CSV row in this format:
-#  team, week, playerID, playerFullname, lineupPosition, fantasyPoints
+#  teamNum, weekNum, playerID, playerFullname, lineupPosition, fantasyPoints
 
 # TODO this assumes that the data is in xml files under data/
-# assumes that each file is named data/stats_<team>_<week>.xml
+# assumes that each file is named data/stats_<teamNum>_<weekNum>.xml
 
 numTeams = 12
 numWeeks = 12
 
 wrtr = csv.writer(sys.stdout)
 
-for tm in range(1, numTeams+1) : 
-	for wk in range(1, numWeeks+1) : 
-		filename = "data/stats_" + format(tm) + "_" + format(wk) + ".xml"
+for teamNum in range(1, numTeams+1) : 
+	for weekNum in range(1, numWeeks+1) : 
+		filename = "data/stats_" + format(teamNum) + "_" + format(weekNum) + ".xml"
 		mydoc = xml.dom.minidom.parse(filename)
-		plrs = mydoc.getElementsByTagName("fantasy-player")
+		players = mydoc.getElementsByTagName("fantasy-player")
 
-		for plr in plrs:
-			plyr_md = plr.getElementsByTagName("fantasy-player-metadata")[0]
-			stats = plr.getElementsByTagName("fantasy-player-stats")[0]
+		for player in players:
+			player_metadata = player.getElementsByTagName("fantasy-player-metadata")[0]
+			player_stats = player.getElementsByTagName("fantasy-player-stats")[0]
 
-			lineupPos = plr.getElementsByTagName("fantasy-selected-position")[0].getAttribute("value")
-			id = plyr_md.getAttribute("player-key")
-			fullname = plyr_md.getElementsByTagName("name")[0].getAttribute("full")
-			points = float(stats.getElementsByTagName("points")[0].getAttribute("value"))
+			# Get the fields we want
+			lineupPos = player.getElementsByTagName("fantasy-selected-position")[0].getAttribute("value")
+			playerID = player_metadata.getAttribute("player-key")
+			fullname = player_metadata.getElementsByTagName("name")[0].getAttribute("full")
+			points = float(player_stats.getElementsByTagName("points")[0].getAttribute("value"))
 			
-			wrtr.writerow([tm, wk, id, fullname, lineupPos, points])
-
-
+			# And write them
+			wrtr.writerow([teamNum, weekNum, playerID, fullname, lineupPos, points])
 
